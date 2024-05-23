@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+data:
+  fluentd.conf: |
+    <source>
+      @type http
+      port 30889
+      bind 0.0.0.0
+    </source>
+
+    <match **>
+      @type file
+      path /var/log/access
+    </match>    

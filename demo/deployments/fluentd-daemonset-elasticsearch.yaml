@@ -1,3 +1,4 @@
+# First attempt to persist logs using cluster-level logging through fluentd DaemonSet
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -56,6 +57,9 @@ spec:
             value: "ThisIsASuperLongToken"
           - name: LOGZIO_LOGTYPE
             value: "kubernetes"
+          # So fluentd can have root permissions to read from /var/log
+          - name: FLUENT_UID
+            value: "0"
         resources:
           limits:
             memory: 200Mi

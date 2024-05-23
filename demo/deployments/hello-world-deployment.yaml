@@ -27,3 +27,23 @@ spec:
             requests:
               memory: 128Mi
               cpu: "80m"
+          volumeMounts:
+          - name: varlog
+            mountPath: /var/log
+        - name: logging-agent
+          image: registry.k8s.io/fluentd-gcp:1.30
+          env:
+          - name: FLUENTD_ARGS
+            value: -c /etc/fluentd-config/fluentd.conf
+          volumeMounts:
+          - name: varlog
+            mountPath: /var/log
+          - name: config-volume
+            mountPath: /etc/fluentd-config
+      volumes:
+      - name: varlog
+        emptyDir: {}
+      # Mapping the configMap to a volume
+      - name: config-volume
+        configMap:
+          name: fluentd-config
