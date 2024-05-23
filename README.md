@@ -10,7 +10,5 @@
 `kubectl expose deploy hello-world-deployment --type=NodePort --port=8080 --target-port=8080`
 5. Hit the running application on the exposed endpoint through your browser
 `http://localhost:30889/api/hello`
-6. Run the following command to setup Role Based Access Control for the fluentd logging agent which will aggregate logs from the running pods
-`kubectl create -f rbac.yaml`
-7. Run the following command to deploy the fluentd logging agent collecting logs to an elasticsearch instance
-`kubectl create -f fluentd-daemonset-elasticsearch.yaml`
+6. Run the following command to setup the plugin configurations for the fluentd logging
+`kubectl create -f fluentd-sidecar-config.yaml`
