@@ -4,13 +4,32 @@ metadata:
   name: fluentd-config
 data:
   fluentd.conf: |
+    # Plugin that configures log source as hello-world applicaiton running on port 30889
     <source>
       @type http
       port 30889
       bind 0.0.0.0
     </source>
 
+    # Plugin to write records to S3
     <match **>
-      @type file
-      path /var/log/access
-    </match>    
+      @type s3
+    
+      aws_key_id AKIAVRUVQRKKDRDYOLE7
+      s3_bucket arn:aws:s3:::log-storage-jonathan
+      s3_region us-east-1
+    
+      path logs/${tag}/%Y/%m/%d/
+      s3_object_key_format %{path}%{time_slice}_%{index}.%{file_extension}
+    
+      <buffer tag,time>
+        @type file
+        path /var/log/fluent/s3
+        timekey 300 # 5 min partition
+        timekey_wait 1m
+        timekey_use_utc true # use utc
+      </buffer>
+      <format>
+        @type json
+      </format>
+    </match>
